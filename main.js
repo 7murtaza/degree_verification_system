@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
             const account = accounts[0];
             if(account){
-                accountNumber.innerHTML = `${account}`;
+                accountNumber.innerHTML = `Wallet Connected`;
                 accountNumber.style.fontSize = "15px";
             }
             alert(`Connected: ${account}`);
@@ -48,4 +48,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 }
-  
