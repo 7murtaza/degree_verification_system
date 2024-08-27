@@ -129,10 +129,55 @@ svg {
 
 .tech_stack{
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    overflow: hidden;
     padding: 20px 0 20px 0;
+    gap: 50px;
 }
+.tech_stack .logo-bar{
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-evenly; 
+    animation: scroll-left 30s linear infinite;
+}
+
+/* 
+.scrolling-container{
+    display: flex;
+    gap: 4rem;
+    overflow: hidden;
+}
+
+.scrolling-content{
+    display: flex;
+    gap: 4rem;
+    animation: loop-scroll 20s linear infinite;
+}
+
+.logos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+@keyframes loop-scroll{
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+} */
+
+@keyframes scroll-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+} 
 
 .main{
     background-image: url(./assets/images/gradient.jpg);
@@ -170,6 +215,7 @@ svg {
 .illustration{
     width: 50%;
 }
+
 
 .nav > ul{
     list-style: none;

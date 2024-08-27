@@ -48,3 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const logoBar = document.querySelector('.logo-bar');
+  const copyBar = document.querySelector('.copy-bar');
+
+  logoBar.addEventListener('mouseover', () => {
+    logoBar.style.animationPlayState = 'paused';
+    copyBar.style.animationPlayState = 'paused';
+  });
+
+  logoBar.addEventListener('mouseout', () => {
+    logoBar.style.animationPlayState = 'running';
+    copyBar.style.animationPlayState = 'running';
+  });
+});
