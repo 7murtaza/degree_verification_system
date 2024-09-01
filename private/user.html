@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Username</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #username {
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome, <span id="username"></span>!</h1>
+    <button class="signOut">logout</button>
+<script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to handle logout
+            async function handleLogout() {
+                try {
+                    // Make a POST request to the /logout endpoint
+                    const response = await fetch('http://localhost:3000/signout', {
+                        method: 'POST',
+                        credentials: 'include',  // Include cookies with the request
+                    });
+
+                    if (response.ok) {
+                        // If logout is successful, redirect to the home page or login page
+                        window.location.href = '/';  // Redirect to home page
+                    } else {
+                        console.error('Failed to log out');
+                    }
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                }
+            }
+
+            // Add click event listener to logout button
+            document.querySelector('.signOut').addEventListener('click', handleLogout);
+        });
+    </script>
+
+    </script>
+</body>
+
+</html>
