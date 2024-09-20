@@ -5,24 +5,356 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Username</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Roboto";
         }
 
-        #username {
+        .container {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center {
+            width: 180px;
+            height: 60px;
+            position: absolute;
+        }
+
+        #wallet {
+            width: 180px;
+            height: 60px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid #f1c130;
+            outline: none;
+            transition: 1s ease-in-out;
+            font-size: large;
+        }
+
+        svg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            fill: none;
+            stroke: #fff;
+            stroke-dasharray: 150 480;
+            stroke-dashoffset: 150;
+            transition: 1s ease-in-out;
+        }
+
+        #wallet:hover {
+            transition: 1s ease-in-out;
+            /* background: #4F95DA; */
+            background: tomato;
+            border: 1px solid white;
+        }
+
+        #wallet:hover svg {
+            stroke-dashoffset: -480;
+        }
+
+        #wallet span {
+            color: white;
+            font-family: "Roboto";
+            font-size: 18px;
+            font-weight: 100;
+        }
+
+        .wallet-text {
+            color: #f1c130;
+        }
+
+        /* body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        } */
+
+        #degree {
+            background-color: rgb(39, 39, 39);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+            color: white;
+            padding: 20px;
+            /* border-radius: 8px; */
+            cursor: pointer;
+
             font-size: 20px;
-            color: #333;
+            font-family: "Roboto";
+        }
+
+        #revoke {
+            background-color: rgb(102, 0, 128);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+            color: white;
+            padding: 20px;
+            /* border-radius: 8px; */
+            cursor: pointer;
+            font-size: 20px;
+            font-family: "Roboto";
+        }
+
+        #formContainer {
+            display: none;
+            position: relative;
+            left: 30%;
+            border-radius: 2px solid rgb(44, 44, 44);
+            padding: 20px;
+            width: 500px;
+            height: 360px;
+            margin: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        #revokeContainer {
+            display: none;
+            position: relative;
+            left: 30%;
+            border-radius: 2px solid rgb(44, 44, 44);
+            padding: 20px;
+            width: 500px;
+            height: 360px;
+            margin: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        input {
+            display: block;
+            margin-bottom: 5px;
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+
+        #uploadBtn {
+            background-color: #fbbd67;
+            color: white;
+            padding: 10px;
+            font-family: "Poppins";
+            border: none;
+            position: relative;
+            left: 10px;
+            top: 20px;
+        }
+       
+        #getHashBtn {
+            background-color: rgb(98, 0, 128);
+            color: white;
+            padding: 10px;
+            font-family: "Poppins";
+            border: none;
+            position: relative;
+            left: 10px;
+            top: 10px;
+        }
+
+        #getHashBtn:hover {
+            background-color: #c822f1;
+        }
+
+        #uploadBtn:hover {
+            background-color: rgb(0, 68, 131);
+        }
+
+        #verifyBtn {
+            background-color: rgb(87, 6, 87);
+            color: white;
+            padding: 10px;
+            font-family: "Poppins";
+            border: none;
+            position: relative;
+            left: 46px;
+            top: 20px;
+        }
+
+        
+        #verifyBtn:hover {
+            background-color: rgb(235, 9, 235);
+        }
+
+        #revokeBtn {
+            background-color: #fbbd67;
+            color: white;
+            padding: 10px;
+            font-family: "Poppins";
+            border: none;
+            position: relative;
+            height: 50px;
+            left: 3px;
+            top: 10px;
+            width: 100%;
+        }
+
+        #revokeBtn:hover {
+            background-color:#660080;        
+        }
+        
+        #message {
+            display: none;
+            padding: 10px 0;
+            color: white;
+            background-color: red;
+            text-align: center;
+            position: absolute;
+            top: 86%;
+            left: 15%;
+            width: 70%;
+            border-radius: 5px;
+            animation: fadeOut 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        label {
+            font-family: "Poppins";
+            margin: 0px;
+            padding: 0;
         }
     </style>
+
 </head>
 
 <body>
-    <h1>Welcome, <span id="username"></span>!</h1>
-    <button class="signOut">logout</button>
-<script>
+    <header>
+        <div class="nav">
+            <div>
+                <img src="assets/images/logo final.svg" alt="logo icon" srcset="" width="100px">
+            </div>
+            <div>
+                <h1 id="accountNumber">Degree Verification System</h1>
+            </div>
 
+            <div>
+                <div class="container">
+                    <div class="center">
+                        <a>
+                            <button id="wallet" class="signOut">
+
+                                <svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+                                    <polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+                                    <polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+                                </svg>
+                                <span id="accountNumber">Logout</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="degree">Upload/Verify Degree Record to Blockchain</div>
+
+
+    <div id="formContainer">
+        <form id="degreeForm">
+            <div style="display: flex; margin: 10px;">
+                <div style="padding-right: 60px;">
+                    <label for="">Name</label>
+                    <input type="text" id="name" placeholder="Enter Your Name" required>
+                </div>
+
+                <div>
+                    <label for="">University</label>
+                    <input type="text" id="university" placeholder="Enter Your University" required>
+                </div>
+            </div>
+
+
+            <div style="display: flex; margin: 10px;">
+                <div style="padding-right: 60px;">
+                    <label for="">Degree Name</label>
+                    <input type="text" id="degreeName" placeholder="Enter Degree Name" required>
+                </div>
+                <div>
+                    <label for="">Year Degree Awarded</label>
+                    <input type="text" id="year" placeholder="Enter Year Degree Awarded" required>
+                </div>
+            </div>
+
+            <div style="display: flex; margin: 10px;">
+                <div style="padding-right: 60px;">
+                    <label for="">Roll Number</label>
+                    <input type="text" id="rollNo" placeholder="Enter Roll Number" required>
+                </div>
+                <div>
+                    <label for="">Registration Number</label>
+                    <input type="text" id="regNo" placeholder="Enter Registration Number" required>
+                </div>
+            </div>
+
+            <button type="button" id="uploadBtn">Upload Degree to Blockchain</button>
+            <button type="button" id="verifyBtn">Verify Degree on Blockchain</button>
+            <div id="message"></div>
+        </form>
+    </div>
+
+    <div id="qrCodeDisplayContainer" style="margin-top: 20px; padding: 10px;">
+        <h3 style="text-align: center; font-family: Poppins;">QR Code</h3>
+        <div style="position: relative; left: 45%;" id="qrCodeContainer"></div>
+        <br>
+        <button id="downloadQRCode"
+            style="display: none; position: relative; left: 45%; padding: 10px; background-color: rgb(18, 138, 207); border: none; color: white;">Download
+            QR Code</button>
+    </div>
+
+    <div id="revoke">Revoke Degree on Blockchain</div>
+    <div id="revokeContainer">
+        <form>
+            <div style="display: flex; margin: 10px;">
+                <div style="padding-right: 60px;">
+                    <label for="">Roll Number</label>
+                    <input type="text" id="revokeRollNumber" placeholder="Enter Roll Number" required>
+                    <label for="">Name</label>
+                    <input type="text" id="revokeName" placeholder="Enter Your Name" required>
+                </div>
+            <button type="button" id="getHashBtn">Get Hash From blockchain</button>
+        </div>
+    </form>
+    <br><br>
+    <div id="hash"></div>
+        <br><br><hr><br><br>
+        <form >
+            <div>
+                <label for="">Hash</label>
+                <input type="text" id="degreeHash" placeholder="Enter Degree Hash" required>
+            <button type="button" id="revokeBtn">Revoke Degree</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Function to handle logout
             async function handleLogout() {
@@ -47,7 +379,439 @@
             // Add click event listener to logout button
             document.querySelector('.signOut').addEventListener('click', handleLogout);
         });
-    </script>
+
+
+        const degreeDiv = document.getElementById('degree');
+        const revokeDiv = document.getElementById('revoke');
+        const formContainer = document.getElementById('formContainer');
+        const revokeContainer = document.getElementById('revokeContainer');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const messageDiv = document.getElementById('message');
+        const smallFee = ethers.utils.parseEther('0.001'); // Fee in ETH (e.g., 0.001 ETH)
+
+        // Contract ABI and Address
+
+
+        const contractABI = [
+        {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "degreeHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "DegreeRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "degreeHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "rollNo",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "DegreeUploaded",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "fee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "degreeHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "rollNo",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "uploadDegree",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "degreeHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "verifyDegree",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "degreeHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isDegreeExists",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "rollNo",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "getDegreeHashByRollNumberAndName",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "degreeHashData",
+          "type": "bytes32"
+        }
+      ],
+      "name": "revokeDegree",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }];
+        const contractAddress = '0x8d706AFdAccC1eb33a58d953C5FC50E314700A5B';
+
+        // Connect to Ethereum provider and create contract instance
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        // Show the form when the Degree div is clicked
+        degreeDiv.onclick = () => {
+            if (formContainer.style.display == 'block') {
+                formContainer.style.display = 'none';
+            }
+            else {
+                formContainer.style.display = 'block';
+            }
+        };
+
+        revokeDiv.onclick = () => {
+            if (revokeContainer.style.display == 'block') {
+                revokeContainer.style.display = 'none';
+            }
+            else {
+                revokeContainer.style.display = 'block';
+            }
+        };
+
+        // Function to display error message for 5 seconds
+        const showMessage = (msg) => {
+            messageDiv.textContent = msg;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        };
+
+        // Function to check MetaMask connection
+        const checkMetaMask = async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    return accounts.length > 0;
+                } catch (error) {
+                    showMessage('MetaMask connection failed!');
+                    return false;
+                }
+            } else {
+                showMessage('MetaMask is not installed.');
+                return false;
+            }
+        };
+
+        // Function to hash the form data
+        const hashDegreeData = () => {
+            const name = document.getElementById('name').value.toUpperCase();
+            const university = document.getElementById('university').value.toUpperCase();
+            const degreeName = document.getElementById('degreeName').value.toUpperCase();
+            const year = document.getElementById('year').value.toUpperCase();
+            const rollNo = document.getElementById('rollNo').value.toUpperCase();
+            const regNo = document.getElementById('regNo').value.toUpperCase();
+
+            const data = `${name}${university}${degreeName}${year}${rollNo}${regNo}`;
+            // const dataToUpper = data.toUpperCase();
+            return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data.toUpperCase())); // Using keccak256 hashing
+        };
+
+
+        // ######################################################################
+        uploadBtn.onclick = async () => {
+            const name = document.getElementById('name').value.trim().toUpperCase();
+            const university = document.getElementById('university').value.trim().toUpperCase();
+            const degreeName = document.getElementById('degreeName').value.trim().toUpperCase();
+            const year = document.getElementById('year').value.trim();
+            const rollNo = document.getElementById('rollNo').value.trim().toUpperCase();
+            const regNo = document.getElementById('regNo').value.trim().toUpperCase();
+
+            // Check if all fields are filled
+            if (!name || !university || !degreeName || !year || !rollNo || !regNo) {
+                showMessage('Please fill in all fields before proceeding.');
+                return;
+            }
+
+            const connected = await checkMetaMask();
+            if (!connected) return;
+
+            // Generate hash for the degree data
+            const degreeHash = hashDegreeData(name, university, degreeName, year, rollNo, regNo);
+
+            try {
+                // Check if degree exists on the blockchain
+                const exists = await contract.isDegreeExists(degreeHash);
+
+                if (exists) {
+                    const update = confirm('Degree already exists on blockchain. Do you still want to generate the QR code?');
+                    if (!update) return;
+                } else {
+                  
+                    const tx = await contract.uploadDegree(degreeHash, rollNo,name,  { value: smallFee });
+                    await tx.wait();
+                    alert('Degree uploaded to the blockchain successfully.');
+                }
+
+                generateQRCode(name, university, degreeName, year, rollNo, regNo, degreeHash);
+
+            } catch (error) {
+                showMessage('Transaction failed or error occurred!');
+            }
+        };
+
+        // Function to generate QR code with student details and degree hash
+        function generateQRCode(name, university, degreeName, year, rollNo, regNo, degreeHash) {
+            // Clear the QR code container before adding a new one
+            const qrCodeContainer = document.getElementById('qrCodeContainer');
+            qrCodeContainer.innerHTML = ''; // Clear any previous QR code
+
+            // Prepare student details and hash as JSON string for QR code
+            const qrData = JSON.stringify({
+                name,
+                university,
+                degreeName,
+                year,
+                rollNo,
+                regNo,
+                degreeHash
+            });
+
+            // Generate QR code with the JSON string
+            const qrCode = new QRCode(qrCodeContainer, {
+                text: qrData,
+                width: 128,
+                height: 128
+            });
+
+            alert('QR code generated for degree verification.');
+
+            // Add download button visibility
+            const downloadBtn = document.getElementById('downloadQRCode');
+            downloadBtn.style.display = 'block'; // Show the download button
+            downloadBtn.onclick = () => downloadQRCode(qrCodeContainer);
+        }
+
+        // Function to download the QR code as an image
+        function downloadQRCode(qrCodeContainer) {
+            const qrCanvas = qrCodeContainer.querySelector('canvas'); // Get the QR code's canvas
+            const img = qrCanvas.toDataURL('image/png'); // Convert canvas to image data
+
+            // Create a temporary link element to download the QR code
+            const downloadLink = document.createElement('a');
+            downloadLink.href = img;
+            downloadLink.download = 'degree-verification-qrcode.png'; // File name for download
+            document.body.appendChild(downloadLink);
+            downloadLink.click(); // Trigger the download
+            document.body.removeChild(downloadLink); // Clean up
+        }
+
+
+        // ######################################################################
+
+
+
+        // Function to verify degree on the blockchain with fee
+        verifyBtn.onclick = async () => {
+            const connected = await checkMetaMask();
+            if (!connected) return;
+
+            const degreeHash = hashDegreeData();
+
+            try {
+                // Check if degree exists before verification
+                const exists = await contract.isDegreeExists(degreeHash);
+
+                if (exists) {
+                    const tx = await contract.verifyDegree(degreeHash, { value: smallFee });
+                    const verified = await tx.wait();
+                    if (verified) {
+                        alert('Degree is verified on the blockchain.');
+                    } else {
+                        alert('Degree does not match any records on the blockchain.');
+                    }
+                } else {
+                    alert('Degree has not been uploaded to the blockchain.');
+                }
+            } catch (error) {
+                showMessage('Transaction failed or error occurred!');
+            }
+        };
+
+
+
+
+        // =====================================================================================
+        // =====================================================================================
+        // =====================================================================================
+
+        // Assuming your contract is already initialized and connected with MetaMask
+const getHashBtn = document.getElementById('getHashBtn');
+const revokeBtn = document.getElementById('revokeBtn');
+
+// Handle the Get Hash From Blockchain button click
+getHashBtn.onclick = async () => {
+    const rollNumber = document.getElementById('revokeRollNumber').value.trim().toUpperCase();
+    const name = document.getElementById('revokeName').value.trim().toUpperCase();
+
+    // Check if both fields are filled
+    if (!rollNumber || !name) {
+        alert('Please enter both roll number and name.');
+        return;
+    }
+
+    try {
+        const connected = await checkMetaMask();
+        if (!connected) return;
+
+        // Call the smart contract to get the degree hash for the roll number and name
+        const degreeHash = await contract.getDegreeHashByRollNumberAndName(rollNumber, name);
+
+        // Display the hash in the hash div
+        const hashDiv = document.getElementById('hash');
+        hashDiv.innerHTML = `<strong>Degree Hash:</strong> ${degreeHash}`;
+
+        // Optionally, pre-fill the hash in the Revoke Degree form
+        document.getElementById('degreeHash').value = degreeHash;
+
+    } catch (error) {
+        console.error('Error retrieving hash from blockchain: ', error);
+        alert('Failed to retrieve hash. Make sure the details are correct.');
+    }
+};
+
+// Handle the Revoke Degree button click
+revokeBtn.onclick = async () => {
+    const degreeHash = document.getElementById('degreeHash').value.trim();
+
+    if (!degreeHash) {
+        alert('Please enter the degree hash to revoke.');
+        return;
+    }
+
+    try {
+        const connected = await checkMetaMask();
+        if (!connected) return;
+
+        // Call the smart contract's revokeDegree function with the degree hash
+        const tx = await contract.revokeDegree(degreeHash);
+        await tx.wait(); // Wait for the transaction to be confirmed
+
+        alert('Degree revoked successfully.');
+
+    } catch (error) {
+        console.error('Error revoking degree: ', error);
+        alert('Failed to revoke degree. Make sure the hash is correct.');
+    }
+};
 
     </script>
 </body>
